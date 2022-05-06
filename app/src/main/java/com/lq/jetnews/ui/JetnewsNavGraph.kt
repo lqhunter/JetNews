@@ -14,11 +14,11 @@ import com.lq.jetnews.ui.home.HomeRoute
 import com.lq.jetnews.ui.interest.InterestRoute
 
 @Composable
-fun JetnewsNavGraph(navHostController: NavHostController) {
+fun JetnewsNavGraph(navHostController: NavHostController, openDrawer: () -> Unit) {
 
     NavHost(navController = navHostController, startDestination = JetnewsDestinations.HOME_ROUTE) {
         composable(route = JetnewsDestinations.HOME_ROUTE) {
-            HomeRoute()
+            HomeRoute(openDrawer)
         }
 
         composable(route = JetnewsDestinations.INTEREST_ROUTE) {
