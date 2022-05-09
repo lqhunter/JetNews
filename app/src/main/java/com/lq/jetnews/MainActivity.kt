@@ -15,7 +15,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             JetNewsTheme {
-                //todo ???
+                //todo? windowSize作用
                 val windowSize = rememberWindowSizeClass()
                 JetNewApp(windowSize)
             }

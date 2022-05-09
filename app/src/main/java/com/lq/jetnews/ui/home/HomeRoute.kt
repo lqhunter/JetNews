@@ -12,10 +12,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.lq.jetnews.R
+import com.lq.jetnews.data.posts.posts
 
 @Composable
-fun HomeRoute(openDrawer: () -> Unit) {
-    HomeTopAppBar(openDrawer = openDrawer)
+fun HomeRoute(openDrawer: () -> Unit, scaffoldState: ScaffoldState = rememberScaffoldState()) {
+
+    Column {
+        HomeTopAppBar(openDrawer = openDrawer)
+
+        val post = posts.highlightedPost
+        PostListTopSection(post) {
+
+        }
+    }
+
+
+
 }
 
 
