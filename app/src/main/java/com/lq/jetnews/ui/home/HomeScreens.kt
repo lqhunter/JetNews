@@ -1,6 +1,9 @@
 package com.lq.jetnews.ui.home
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,4 +23,25 @@ fun PostListTopSection(post: Post, navigateToArticle: (String) -> Unit) {
         text = stringResource(id = R.string.home_top_section_title)
     )
     PostCardTop(post)
+    PostListDivider()
+}
+
+@Composable
+fun PostListSimpleSection(
+    post: List<Post>,
+) {
+    Column {
+        post.forEach {
+            PostCardSimple(post = it)
+        }
+        PostListDivider()
+    }
+}
+
+@Composable
+fun PostListDivider() {
+    Divider(
+        modifier = Modifier.padding(horizontal = 14.dp),
+        color = MaterialTheme.colors.onSurface.copy(alpha = 0.08f)
+    )
 }

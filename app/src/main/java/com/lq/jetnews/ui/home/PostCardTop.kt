@@ -2,11 +2,11 @@ package com.lq.jetnews.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -47,13 +47,18 @@ fun PostCardTop(post: Post, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(bottom = 4.dp)
         )
 
-        Text(
-            text = stringResource(
-                id = R.string.home_post_min_read,
-                formatArgs = arrayOf(post.metadata.date, post.metadata.readTimeMinutes)
-            ),
-            style = typography.subtitle2
-        )
+        //这里效果和 Modifier.alpha 一样
+        CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+            Text(
+                text = stringResource(
+                    id = R.string.home_post_min_read,
+                    formatArgs = arrayOf(post.metadata.date, post.metadata.readTimeMinutes)
+                ),
+                style = typography.subtitle2,
+//                modifier = Modifier.alpha(ContentAlpha.medium)
+            )
+        }
+
 
     }
 }
