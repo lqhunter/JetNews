@@ -7,6 +7,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -15,8 +17,12 @@ import com.lq.jetnews.R
 import com.lq.jetnews.data.posts.posts
 
 @Composable
-fun HomeRoute(openDrawer: () -> Unit, scaffoldState: ScaffoldState = rememberScaffoldState()) {
-
+fun HomeRoute(
+    homeViewModel: HomeViewModel,
+    openDrawer: () -> Unit,
+    scaffoldState: ScaffoldState = rememberScaffoldState()
+) {
+    val uiState by homeViewModel.uiState.collectAsState()
     Column {
         HomeTopAppBar(openDrawer = openDrawer)
 
@@ -24,8 +30,15 @@ fun HomeRoute(openDrawer: () -> Unit, scaffoldState: ScaffoldState = rememberSca
         PostListTopSection(post) {
 
         }
-    }
 
+        when (uiState) {
+            is HomeUiState.NoPosts -> {
+            }
+            is HomeUiState.HasPosts -> {
+                PostListSimpleSection((uiState as HomeUiState.HasPosts).postsFeed.allPosts)
+            }
+        }
+    }
 
 
 }

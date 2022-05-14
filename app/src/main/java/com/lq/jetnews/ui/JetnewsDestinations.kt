@@ -1,4 +1,4 @@
-package com.lq.jetnews
+package com.lq.jetnews.ui
 
 object JetnewsDestinations {
     const val HOME_ROUTE = "home"

@@ -8,12 +8,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.lq.jetnews.JetnewsDestinations
+import com.lq.jetnews.data.AppContainer
 import com.lq.jetnews.utils.WindowSize
 import kotlinx.coroutines.launch
 
 @Composable
-fun JetNewApp(windowSize: WindowSize) {
+fun JetNewApp(appContainer: AppContainer, windowSize: WindowSize) {
 
     val coroutineScope = rememberCoroutineScope()
     val navController = rememberNavController()
@@ -37,9 +37,9 @@ fun JetNewApp(windowSize: WindowSize) {
         })
     }, drawerState = drawerState) {
         //主页面
-        JetnewsNavGraph(navHostController = navController, openDrawer = {
+        JetnewsNavGraph(appContainer, navHostController = navController) {
             coroutineScope.launch { drawerState.open() }
-        })
+        }
     }
 
 }
