@@ -2,6 +2,8 @@ package com.lq.jetnews.ui.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -29,6 +31,7 @@ fun PostListTopSection(post: Post, navigateToArticle: (String) -> Unit) {
 @Composable
 fun PostListSimpleSection(
     post: List<Post>,
+    navigateToArticle: (String) -> Unit
 ) {
     Column {
         post.forEach {
@@ -44,4 +47,27 @@ fun PostListDivider() {
         modifier = Modifier.padding(horizontal = 14.dp),
         color = MaterialTheme.colors.onSurface.copy(alpha = 0.08f)
     )
+}
+
+@Composable
+fun PostListPopularSection(posts: List<Post>, navigateToArticle: (String) -> Unit) {
+    Column {
+        Text(
+            text = stringResource(id = R.string.home_popular_section_title),
+            modifier = Modifier.padding(16.dp),
+            style = MaterialTheme.typography.subtitle1
+        )
+
+        LazyRow(modifier = Modifier.padding(end = 16.dp)) {
+            items(posts) { post ->
+                PostCardPopular(
+                    post = post,
+                    navigateToArticle = navigateToArticle,
+                    modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                )
+            }
+        }
+
+        PostListDivider()
+    }
 }

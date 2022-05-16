@@ -3,6 +3,7 @@ package com.lq.jetnews.ui.home
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
@@ -23,22 +24,41 @@ fun HomeRoute(
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
     val uiState by homeViewModel.uiState.collectAsState()
+
     Column {
         HomeTopAppBar(openDrawer = openDrawer)
+        LazyColumn {
 
-        val post = posts.highlightedPost
-        PostListTopSection(post) {
+            item {
+                PostListTopSection(posts.highlightedPost) {
 
+                }
+            }
+
+
+            when (uiState) {
+                is HomeUiState.NoPosts -> {
+                }
+                is HomeUiState.HasPosts -> {
+                    item {
+                        PostListSimpleSection((uiState as HomeUiState.HasPosts).postsFeed.recommendedPosts) {
+
+                        }
+                    }
+
+                    item {
+                        PostListPopularSection((uiState as HomeUiState.HasPosts).postsFeed.popularPosts) {
+
+                        }
+                    }
+
+                }
+            }
         }
 
-        when (uiState) {
-            is HomeUiState.NoPosts -> {
-            }
-            is HomeUiState.HasPosts -> {
-                PostListSimpleSection((uiState as HomeUiState.HasPosts).postsFeed.allPosts)
-            }
-        }
     }
+
+
 
 
 }
