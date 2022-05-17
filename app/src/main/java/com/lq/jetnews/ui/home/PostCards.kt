@@ -11,6 +11,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
@@ -37,15 +38,7 @@ fun PostCardSimple(post: Post) {
         PostImage(id = post.imageThumbId, modifier = Modifier.padding(end = 16.dp))
         Column(modifier = Modifier.weight(1f)) {
             Text(text = post.title, style = MaterialTheme.typography.subtitle1)
-            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
-                Text(
-                    text = stringResource(
-                        id = R.string.home_post_min_read,
-                        formatArgs = arrayOf(post.metadata.date, post.metadata.readTimeMinutes)
-                    ),
-                    style = MaterialTheme.typography.body2,
-                )
-            }
+            AuthorAndReadTime(post)
         }
         BookmarkButton(isBookMarked = true) {
 
@@ -55,8 +48,41 @@ fun PostCardSimple(post: Post) {
 }
 
 @Composable
-fun PostCardHistory() {
+private fun AuthorAndReadTime(post: Post) {
+    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+        Text(
+            text = stringResource(
+                id = R.string.home_post_min_read,
+                formatArgs = arrayOf(post.metadata.date, post.metadata.readTimeMinutes)
+            ),
+            style = MaterialTheme.typography.body2,
+        )
+    }
+}
 
+@Composable
+fun PostCardHistory(post: Post, navigateToArticle: (String) -> Unit) {
+    Row(modifier = Modifier
+        .clickable { navigateToArticle(post.id) }) {
+
+        PostImage(id = post.imageThumbId, modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp))
+        Column(Modifier.weight(1f).padding(top = 16.dp, bottom = 16.dp)) {
+            CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
+                Text(
+                    text = stringResource(id = R.string.home_post_based_on_history),
+                    style = MaterialTheme.typography.overline
+                )
+            }
+            Text(post.title, style = MaterialTheme.typography.subtitle1, modifier = Modifier.padding(bottom = 4.dp))
+            AuthorAndReadTime(post)
+        }
+        IconButton(onClick = {  }) {
+            Icon(
+                imageVector = Icons.Filled.MoreVert,
+                contentDescription = stringResource(R.string.cd_more_actions)
+            )
+        }
+    }
 }
 
 @Composable
@@ -98,6 +124,16 @@ fun PreviewButton() {
             BookmarkButton(isBookMarked = true) {
 
             }
+        }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewHistory() {
+    JetNewsTheme {
+        Surface {
+            PostCardHistory(post = post3) {}
         }
     }
 }

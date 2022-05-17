@@ -2,6 +2,7 @@ package com.lq.jetnews.ui.home
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Divider
@@ -63,11 +64,28 @@ fun PostListPopularSection(posts: List<Post>, navigateToArticle: (String) -> Uni
                 PostCardPopular(
                     post = post,
                     navigateToArticle = navigateToArticle,
-                    modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                    modifier = Modifier.padding(start = 16.dp, bottom = 16.dp)
                 )
             }
         }
 
         PostListDivider()
     }
+}
+
+@Composable
+fun PostListHistorySection(posts: List<Post>, navigateToArticle: (String) -> Unit) {
+
+    posts.forEach {
+        PostCardHistory(it) {}
+        PostListDivider()
+    }
+
+    //todo? 报错为什么不能用 LazyColumn,是因为外层用了 LazyColumn，这里就不能用吗
+/*    LazyColumn {
+        items(posts) { post ->
+            PostCardHistory(post) {}
+            PostListDivider()
+        }
+    }*/
 }

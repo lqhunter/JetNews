@@ -51,6 +51,11 @@ fun HomeRoute(
 
                         }
                     }
+                    item {
+                        PostListHistorySection((uiState as HomeUiState.HasPosts).postsFeed.recentPosts) {
+
+                        }
+                    }
 
                 }
             }
