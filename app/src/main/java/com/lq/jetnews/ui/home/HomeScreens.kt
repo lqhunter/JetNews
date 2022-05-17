@@ -13,7 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.lq.jetnews.R
+import com.lq.jetnews.data.posts.posts
 import com.lq.jetnews.model.Post
+import com.lq.jetnews.model.PostsFeed
 
 
 /**
@@ -32,11 +34,12 @@ fun PostListTopSection(post: Post, navigateToArticle: (String) -> Unit) {
 @Composable
 fun PostListSimpleSection(
     post: List<Post>,
+    favorites: Set<String>,
     navigateToArticle: (String) -> Unit
 ) {
     Column {
         post.forEach {
-            PostCardSimple(post = it)
+            PostCardSimple(post = it, favorites.contains(it.id))
         }
         PostListDivider()
     }
@@ -88,4 +91,37 @@ fun PostListHistorySection(posts: List<Post>, navigateToArticle: (String) -> Uni
             PostListDivider()
         }
     }*/
+}
+
+@Composable
+fun PostList(
+    postsFeed: PostsFeed,
+    favorites: Set<String>,
+    onArticleTapped: (postId: String) -> Unit,
+    onToggleFavorite: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyColumn(modifier = modifier) {
+        item {
+            PostListTopSection(posts.highlightedPost, onArticleTapped)
+        }
+
+        if (postsFeed.recommendedPosts.isNotEmpty()) {
+            item {
+                PostListSimpleSection(postsFeed.recommendedPosts, favorites, onArticleTapped)
+            }
+        }
+
+        if (postsFeed.popularPosts.isNotEmpty()) {
+            item {
+                PostListPopularSection(postsFeed.popularPosts, onArticleTapped)
+            }
+        }
+
+        if (postsFeed.recentPosts.isNotEmpty()) {
+            item { PostListHistorySection(postsFeed.recentPosts, onArticleTapped) }
+        }
+
+    }
+
 }

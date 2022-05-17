@@ -27,7 +27,7 @@ import com.lq.jetnews.model.Post
 import com.lq.jetnews.ui.theme.JetNewsTheme
 
 @Composable
-fun PostCardSimple(post: Post) {
+fun PostCardSimple(post: Post, isFavorite: Boolean) {
     Row(modifier = Modifier
         .clickable { }
         .padding(16.dp)
@@ -40,7 +40,7 @@ fun PostCardSimple(post: Post) {
             Text(text = post.title, style = MaterialTheme.typography.subtitle1)
             AuthorAndReadTime(post)
         }
-        BookmarkButton(isBookMarked = true) {
+        BookmarkButton(isBookMarked = isFavorite) {
 
         }
 
@@ -65,18 +65,28 @@ fun PostCardHistory(post: Post, navigateToArticle: (String) -> Unit) {
     Row(modifier = Modifier
         .clickable { navigateToArticle(post.id) }) {
 
-        PostImage(id = post.imageThumbId, modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp))
-        Column(Modifier.weight(1f).padding(top = 16.dp, bottom = 16.dp)) {
+        PostImage(
+            id = post.imageThumbId,
+            modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
+        )
+        Column(
+            Modifier
+                .weight(1f)
+                .padding(top = 16.dp, bottom = 16.dp)) {
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text(
                     text = stringResource(id = R.string.home_post_based_on_history),
                     style = MaterialTheme.typography.overline
                 )
             }
-            Text(post.title, style = MaterialTheme.typography.subtitle1, modifier = Modifier.padding(bottom = 4.dp))
+            Text(
+                post.title,
+                style = MaterialTheme.typography.subtitle1,
+                modifier = Modifier.padding(bottom = 4.dp)
+            )
             AuthorAndReadTime(post)
         }
-        IconButton(onClick = {  }) {
+        IconButton(onClick = { }) {
             Icon(
                 imageVector = Icons.Filled.MoreVert,
                 contentDescription = stringResource(R.string.cd_more_actions)
@@ -111,7 +121,7 @@ fun PostImage(@DrawableRes id: Int, modifier: Modifier = Modifier) {
 fun PreviewSimple() {
     JetNewsTheme {
         Surface {
-            PostCardSimple(post = post3)
+            PostCardSimple(post = post3, true)
         }
     }
 }

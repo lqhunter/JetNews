@@ -27,45 +27,7 @@ fun HomeRoute(
 
     Column {
         HomeTopAppBar(openDrawer = openDrawer)
-        LazyColumn {
-
-            item {
-                PostListTopSection(posts.highlightedPost) {
-
-                }
-            }
-
-
-            when (uiState) {
-                is HomeUiState.NoPosts -> {
-                }
-                is HomeUiState.HasPosts -> {
-                    item {
-                        PostListSimpleSection((uiState as HomeUiState.HasPosts).postsFeed.recommendedPosts) {
-
-                        }
-                    }
-
-                    item {
-                        PostListPopularSection((uiState as HomeUiState.HasPosts).postsFeed.popularPosts) {
-
-                        }
-                    }
-                    item {
-                        PostListHistorySection((uiState as HomeUiState.HasPosts).postsFeed.recentPosts) {
-
-                        }
-                    }
-
-                }
-            }
-        }
-
     }
-
-
-
-
 }
 
 
