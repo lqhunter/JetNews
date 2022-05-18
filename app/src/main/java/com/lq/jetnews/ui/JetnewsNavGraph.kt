@@ -17,6 +17,7 @@ import com.lq.jetnews.ui.interest.InterestRoute
 @Composable
 fun JetnewsNavGraph(
     appContainer: AppContainer,
+    isExpandedScreen: Boolean,
     navHostController: NavHostController,
     openDrawer: () -> Unit
 ) {
@@ -26,7 +27,7 @@ fun JetnewsNavGraph(
             val homeViewModel: HomeViewModel =
                 viewModel(factory = HomeViewModel.provideFactory(appContainer.postsRepository))
 
-            HomeRoute(homeViewModel, openDrawer)
+            HomeRoute(homeViewModel = homeViewModel, isExpandedScreen = isExpandedScreen, openDrawer)
         }
 
         composable(route = JetnewsDestinations.INTEREST_ROUTE) {

@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.lq.jetnews.R
 import com.lq.jetnews.data.posts.posts
@@ -20,19 +21,36 @@ import com.lq.jetnews.data.posts.posts
 @Composable
 fun HomeRoute(
     homeViewModel: HomeViewModel,
+    isExpandedScreen: Boolean,
     openDrawer: () -> Unit,
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
     val uiState by homeViewModel.uiState.collectAsState()
 
-    Column {
-        HomeTopAppBar(openDrawer = openDrawer)
+    when (getHomeScreenType(isExpandedScreen, uiState)) {
+        HomeScreenType.FeedWithArticleDetails -> {
+
+        }
+        HomeScreenType.Feed -> {
+            HomeFeedScreen(
+                uiState = uiState,
+                showTopAppBar = !isExpandedScreen,
+                openDrawer = openDrawer,
+                onRefreshPost = { homeViewModel.refreshPosts() },
+                onToggleFavorite = { },
+                onSelectPost = { }
+            )
+        }
+        HomeScreenType.ArticleDetails -> {
+
+        }
     }
+
 }
 
 
 @Composable
-fun HomeTopAppBar(openDrawer: () -> Unit) {
+fun HomeTopAppBar(elevation: Dp, openDrawer: () -> Unit) {
     //Material Design的app bar
     TopAppBar(
         //中间title
@@ -67,4 +85,43 @@ fun HomeTopAppBar(openDrawer: () -> Unit) {
         },
         backgroundColor = MaterialTheme.colors.surface,
     )
+}
+
+
+/**
+ * A precise enumeration of which type of screen to display at the home route.
+ *
+ * There are 3 options:
+ * - [FeedWithArticleDetails], which displays both a list of all articles and a specific article.
+ * - [Feed], which displays just the list of all articles
+ * - [ArticleDetails], which displays just a specific article.
+ */
+private enum class HomeScreenType {
+    FeedWithArticleDetails,
+    Feed,
+    ArticleDetails
+}
+
+/**
+ * Returns the current [HomeScreenType] to display, based on whether or not the screen is expanded
+ * and the [HomeUiState].
+ */
+@Composable
+private fun getHomeScreenType(
+    isExpandedScreen: Boolean,
+    uiState: HomeUiState
+): HomeScreenType = when (isExpandedScreen) {
+    false -> {
+        when (uiState) {
+            is HomeUiState.HasPosts -> {
+                if (uiState.isArticleOpen) {
+                    HomeScreenType.ArticleDetails
+                } else {
+                    HomeScreenType.Feed
+                }
+            }
+            is HomeUiState.NoPosts -> HomeScreenType.Feed
+        }
+    }
+    true -> HomeScreenType.FeedWithArticleDetails
 }

@@ -91,7 +91,8 @@ private data class HomeViewModelState(
                 favorites = favorites,
                 isLoading = isLoading,
                 errorMessages = errorMessages,
-                searchInput = searchInput
+                searchInput = searchInput,
+                isArticleOpen = false
             )
         }
     }
@@ -114,7 +115,8 @@ sealed interface HomeUiState {
         val favorites: Set<String>,
         override val isLoading: Boolean,
         override val errorMessages: List<ErrorMessage>,
-        override val searchInput: String
+        override val searchInput: String,
+        val isArticleOpen: Boolean,
     ) : HomeUiState
 }
 

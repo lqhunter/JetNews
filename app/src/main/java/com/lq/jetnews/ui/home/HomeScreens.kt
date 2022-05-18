@@ -1,17 +1,19 @@
 package com.lq.jetnews.ui.home
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import android.widget.Toast
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.lq.jetnews.R
 import com.lq.jetnews.data.posts.posts
 import com.lq.jetnews.model.Post
@@ -93,8 +95,35 @@ fun PostListHistorySection(posts: List<Post>, navigateToArticle: (String) -> Uni
     }*/
 }
 
+
 @Composable
-fun PostList(
+fun HomeFeedScreen(
+    uiState: HomeUiState,
+    showTopAppBar: Boolean,
+    openDrawer: () -> Unit,
+    onRefreshPost: () -> Unit,
+    onToggleFavorite: (String) -> Unit,
+    onSelectPost: (String) -> Unit,
+) {
+    HomeScreenWithList(
+        uiState = uiState,
+        showTopAppBar = showTopAppBar,
+        openDrawer = openDrawer,
+        onRefreshPost = onRefreshPost
+    ) { hasPostsUiState, modifier ->
+        PostList(
+            postsFeed = hasPostsUiState.postsFeed,
+            favorites = hasPostsUiState.favorites,
+            onArticleTapped = onSelectPost,
+            onToggleFavorite = onToggleFavorite,
+            modifier = modifier
+        )
+
+    }
+}
+
+@Composable
+private fun PostList(
     postsFeed: PostsFeed,
     favorites: Set<String>,
     onArticleTapped: (postId: String) -> Unit,
@@ -124,4 +153,86 @@ fun PostList(
 
     }
 
+}
+
+@Composable
+fun HomeScreenWithList(
+    uiState: HomeUiState,
+    showTopAppBar: Boolean,
+    openDrawer: () -> Unit,
+    onRefreshPost: () -> Unit,
+    hasPostsContent: @Composable (
+        uiState: HomeUiState.HasPosts,
+        modifier: Modifier
+    ) -> Unit
+) {
+    Scaffold(
+        snackbarHost = {},
+        topBar = {
+            if (showTopAppBar) {
+                HomeTopAppBar(
+                    openDrawer = openDrawer,
+                    elevation = 4.dp
+                )
+            }
+        }
+    ) { innerPadding ->
+        val contentModifier = Modifier.padding(innerPadding)
+        when (uiState) {
+            is HomeUiState.HasPosts -> {
+                LoadingContent(loading = uiState.isLoading, onRefresh = onRefreshPost) {
+                    hasPostsContent(uiState, contentModifier)
+                }
+            }
+            is HomeUiState.NoPosts -> {
+                if (uiState.isLoading) {
+                    FullScreenLoading()
+                } else {
+                    if (uiState.errorMessages.isEmpty()) {
+                        // if there are no posts, and no error, let the user refresh manually
+                        TextButton(
+                            onClick = onRefreshPost,
+//                            modifier.fillMaxSize()
+                        ) {
+                            Text(
+                                stringResource(id = R.string.home_tap_to_load_content),
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    } else {
+                        // there's currently an error showing, don't show any content
+                        Box(contentModifier.fillMaxSize()) { /* empty screen */ }
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+@Composable
+fun LoadingContent(
+    loading: Boolean,
+    onRefresh: () -> Unit,
+    content: @Composable () -> Unit = {}
+) {
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = loading),
+        onRefresh = onRefresh,
+        content = content
+    )
+}
+
+/**
+ * Full screen circular progress indicator
+ */
+@Composable
+private fun FullScreenLoading() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center)
+    ) {
+        CircularProgressIndicator()
+    }
 }

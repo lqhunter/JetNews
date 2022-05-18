@@ -37,7 +37,7 @@ fun JetNewApp(appContainer: AppContainer, windowSize: WindowSize) {
         })
     }, drawerState = drawerState) {
         //主页面
-        JetnewsNavGraph(appContainer, navHostController = navController) {
+        JetnewsNavGraph(appContainer, navHostController = navController, isExpandedScreen = isExpandedScreen) {
             coroutineScope.launch { drawerState.open() }
         }
     }
