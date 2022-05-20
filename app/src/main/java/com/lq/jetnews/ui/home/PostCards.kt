@@ -27,7 +27,7 @@ import com.lq.jetnews.model.Post
 import com.lq.jetnews.ui.theme.JetNewsTheme
 
 @Composable
-fun PostCardSimple(post: Post, isFavorite: Boolean) {
+fun PostCardSimple(post: Post, isFavorite: Boolean, onToggleFavorite: (String) -> Unit) {
     Row(modifier = Modifier
         .clickable { }
         .padding(16.dp)
@@ -41,7 +41,7 @@ fun PostCardSimple(post: Post, isFavorite: Boolean) {
             AuthorAndReadTime(post)
         }
         BookmarkButton(isBookMarked = isFavorite) {
-
+            onToggleFavorite(post.id)
         }
 
     }
@@ -72,7 +72,8 @@ fun PostCardHistory(post: Post, navigateToArticle: (String) -> Unit) {
         Column(
             Modifier
                 .weight(1f)
-                .padding(top = 16.dp, bottom = 16.dp)) {
+                .padding(top = 16.dp, bottom = 16.dp)
+        ) {
             CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.medium) {
                 Text(
                     text = stringResource(id = R.string.home_post_based_on_history),
@@ -121,7 +122,9 @@ fun PostImage(@DrawableRes id: Int, modifier: Modifier = Modifier) {
 fun PreviewSimple() {
     JetNewsTheme {
         Surface {
-            PostCardSimple(post = post3, true)
+            PostCardSimple(post = post3, true) {
+
+            }
         }
     }
 }

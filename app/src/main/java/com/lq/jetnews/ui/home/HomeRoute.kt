@@ -37,7 +37,7 @@ fun HomeRoute(
                 showTopAppBar = !isExpandedScreen,
                 openDrawer = openDrawer,
                 onRefreshPost = { homeViewModel.refreshPosts() },
-                onToggleFavorite = { },
+                onToggleFavorite = { homeViewModel.toggleFavourite(it) },
                 onSelectPost = { }
             )
         }

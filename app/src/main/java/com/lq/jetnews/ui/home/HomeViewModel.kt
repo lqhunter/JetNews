@@ -42,6 +42,16 @@ class HomeViewModel(private val postsRepository: PostsRepository) : ViewModel() 
     init {
         //todo?为什么在init里面初始化数据
         refreshPosts()
+
+        viewModelScope.launch {
+            postsRepository.observeFavorites().collect { favorites ->
+                viewModelState.update {
+                    it.copy(favorites = favorites)
+                }
+            }
+        }
+
+
     }
 
 
@@ -67,6 +77,12 @@ class HomeViewModel(private val postsRepository: PostsRepository) : ViewModel() 
 
         }
 
+    }
+
+    fun toggleFavourite(postId: String) {
+        viewModelScope.launch {
+            postsRepository.toggleFavorite(postId)
+        }
     }
 }
 

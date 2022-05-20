@@ -37,11 +37,12 @@ fun PostListTopSection(post: Post, navigateToArticle: (String) -> Unit) {
 fun PostListSimpleSection(
     post: List<Post>,
     favorites: Set<String>,
-    navigateToArticle: (String) -> Unit
+    navigateToArticle: (String) -> Unit,
+    onToggleFavorite: (String) -> Unit
 ) {
     Column {
         post.forEach {
-            PostCardSimple(post = it, favorites.contains(it.id))
+            PostCardSimple(post = it, favorites.contains(it.id), onToggleFavorite = onToggleFavorite)
         }
         PostListDivider()
     }
@@ -137,7 +138,7 @@ private fun PostList(
 
         if (postsFeed.recommendedPosts.isNotEmpty()) {
             item {
-                PostListSimpleSection(postsFeed.recommendedPosts, favorites, onArticleTapped)
+                PostListSimpleSection(postsFeed.recommendedPosts, favorites, onArticleTapped, onToggleFavorite = onToggleFavorite)
             }
         }
 
