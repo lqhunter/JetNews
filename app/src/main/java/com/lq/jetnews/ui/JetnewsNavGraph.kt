@@ -27,7 +27,11 @@ fun JetnewsNavGraph(
             val homeViewModel: HomeViewModel =
                 viewModel(factory = HomeViewModel.provideFactory(appContainer.postsRepository))
 
-            HomeRoute(homeViewModel = homeViewModel, isExpandedScreen = isExpandedScreen, openDrawer)
+            HomeRoute(
+                homeViewModel = homeViewModel,
+                isExpandedScreen = isExpandedScreen,
+                openDrawer = openDrawer,
+            )
         }
 
         composable(route = JetnewsDestinations.INTEREST_ROUTE) {

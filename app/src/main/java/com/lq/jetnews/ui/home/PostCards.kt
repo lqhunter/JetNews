@@ -27,9 +27,14 @@ import com.lq.jetnews.model.Post
 import com.lq.jetnews.ui.theme.JetNewsTheme
 
 @Composable
-fun PostCardSimple(post: Post, isFavorite: Boolean, onToggleFavorite: (String) -> Unit) {
+fun PostCardSimple(
+    post: Post,
+    isFavorite: Boolean,
+    onToggleFavorite: (String) -> Unit,
+    navigateToArticle: (String) -> Unit,
+) {
     Row(modifier = Modifier
-        .clickable { }
+        .clickable { navigateToArticle(post.id) }
         .padding(16.dp)
         .semantics {//todo? 这里是什么意思
 
@@ -122,7 +127,7 @@ fun PostImage(@DrawableRes id: Int, modifier: Modifier = Modifier) {
 fun PreviewSimple() {
     JetNewsTheme {
         Surface {
-            PostCardSimple(post = post3, true) {
+            PostCardSimple(post = post3, true, onToggleFavorite = {}) {
 
             }
         }

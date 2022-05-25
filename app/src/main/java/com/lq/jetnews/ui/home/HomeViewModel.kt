@@ -10,6 +10,7 @@ import com.lq.jetnews.utils.ErrorMessage
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import com.lq.jetnews.data.Result
+import com.lq.jetnews.model.Post
 import java.util.*
 
 class HomeViewModel(private val postsRepository: PostsRepository) : ViewModel() {
@@ -61,7 +62,7 @@ class HomeViewModel(private val postsRepository: PostsRepository) : ViewModel() 
         viewModelScope.launch {
             val result = postsRepository.getPostsFeed()
             viewModelState.update {
-                when(result) {
+                when (result) {
                     is Result.Success -> it.copy(postsFeed = result.data, isLoading = false)
                     is Result.Error -> {
                         val errorMessages = it.errorMessages + ErrorMessage(
@@ -84,12 +85,31 @@ class HomeViewModel(private val postsRepository: PostsRepository) : ViewModel() 
             postsRepository.toggleFavorite(postId)
         }
     }
+
+    fun selectedArticle(postId: String) {
+        viewModelState.update {
+            it.copy(
+                selectedPostId = postId,
+                isArticleOpen = true
+            )
+        }
+    }
+
+    fun closeArticle() {
+        viewModelState.update {
+            it.copy(
+                isArticleOpen = false
+            )
+        }
+    }
 }
 
 private data class HomeViewModelState(
     val postsFeed: PostsFeed? = null,
+    val selectedPostId: String? = null,
     val favorites: Set<String> = emptySet(),
     val isLoading: Boolean = false,
+    val isArticleOpen: Boolean = false,
     val errorMessages: List<ErrorMessage> = emptyList(),
     val searchInput: String = "",
 ) {
@@ -104,11 +124,13 @@ private data class HomeViewModelState(
         } else {
             HomeUiState.HasPosts(
                 postsFeed = postsFeed,
+                selectedPost = postsFeed.allPosts.find { it.id == selectedPostId }
+                    ?: postsFeed.highlightedPost,
                 favorites = favorites,
                 isLoading = isLoading,
                 errorMessages = errorMessages,
                 searchInput = searchInput,
-                isArticleOpen = false
+                isArticleOpen = isArticleOpen
             )
         }
     }
@@ -128,6 +150,7 @@ sealed interface HomeUiState {
 
     data class HasPosts(
         val postsFeed: PostsFeed,
+        val selectedPost: Post,
         val favorites: Set<String>,
         override val isLoading: Boolean,
         override val errorMessages: List<ErrorMessage>,

@@ -1,5 +1,6 @@
 package com.lq.jetnews.ui.home
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,6 +18,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.lq.jetnews.R
 import com.lq.jetnews.data.posts.posts
+import com.lq.jetnews.ui.article.ArticleScreen
 
 @Composable
 fun HomeRoute(
@@ -29,20 +31,33 @@ fun HomeRoute(
 
     when (getHomeScreenType(isExpandedScreen, uiState)) {
         HomeScreenType.FeedWithArticleDetails -> {
+            //列表与详情一起显示
+
 
         }
         HomeScreenType.Feed -> {
+            //列表
             HomeFeedScreen(
                 uiState = uiState,
                 showTopAppBar = !isExpandedScreen,
                 openDrawer = openDrawer,
                 onRefreshPost = { homeViewModel.refreshPosts() },
                 onToggleFavorite = { homeViewModel.toggleFavourite(it) },
-                onSelectPost = { }
+                onSelectPost = { homeViewModel.selectedArticle(it)}
             )
         }
         HomeScreenType.ArticleDetails -> {
+            check(uiState is HomeUiState.HasPosts)
+            //详情
+            ArticleScreen(
+                post = (uiState as HomeUiState.HasPosts).selectedPost,
+            ) {
+                homeViewModel.closeArticle()
+            }
 
+            BackHandler {
+                homeViewModel.closeArticle()
+            }
         }
     }
 

@@ -29,7 +29,7 @@ fun PostListTopSection(post: Post, navigateToArticle: (String) -> Unit) {
         modifier = Modifier.padding(start = 16.dp, top = 16.dp, end = 16.dp),
         text = stringResource(id = R.string.home_top_section_title)
     )
-    PostCardTop(post)
+    PostCardTop(post, navigateToArticle = navigateToArticle)
     PostListDivider()
 }
 
@@ -42,7 +42,7 @@ fun PostListSimpleSection(
 ) {
     Column {
         post.forEach {
-            PostCardSimple(post = it, favorites.contains(it.id), onToggleFavorite = onToggleFavorite)
+            PostCardSimple(post = it, favorites.contains(it.id), onToggleFavorite = onToggleFavorite, navigateToArticle)
         }
         PostListDivider()
     }
@@ -83,7 +83,7 @@ fun PostListPopularSection(posts: List<Post>, navigateToArticle: (String) -> Uni
 fun PostListHistorySection(posts: List<Post>, navigateToArticle: (String) -> Unit) {
 
     posts.forEach {
-        PostCardHistory(it) {}
+        PostCardHistory(it, navigateToArticle = navigateToArticle)
         PostListDivider()
     }
 

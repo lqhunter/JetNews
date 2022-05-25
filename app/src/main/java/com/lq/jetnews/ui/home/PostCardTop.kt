@@ -1,6 +1,7 @@
 package com.lq.jetnews.ui.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -19,12 +20,13 @@ import com.lq.jetnews.model.Post
 import com.lq.jetnews.ui.theme.JetNewsTheme
 
 @Composable
-fun PostCardTop(post: Post, modifier: Modifier = Modifier) {
+fun PostCardTop(post: Post, modifier: Modifier = Modifier, navigateToArticle: (String) -> Unit) {
     val typography = MaterialTheme.typography
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
+            .clickable { navigateToArticle(post.id) }
     ) {
         Image(
             painter = painterResource(post.imageId), contentDescription = null,
@@ -70,7 +72,7 @@ private fun Preview() {
 
     JetNewsTheme {
         Surface {
-            PostCardTop(post = post)
+            PostCardTop(post = post) {}
         }
     }
 }
