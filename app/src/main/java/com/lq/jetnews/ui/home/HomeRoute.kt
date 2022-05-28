@@ -43,14 +43,17 @@ fun HomeRoute(
                 openDrawer = openDrawer,
                 onRefreshPost = { homeViewModel.refreshPosts() },
                 onToggleFavorite = { homeViewModel.toggleFavourite(it) },
-                onSelectPost = { homeViewModel.selectedArticle(it)}
+                onSelectPost = { homeViewModel.selectedArticle(it) }
             )
         }
         HomeScreenType.ArticleDetails -> {
             check(uiState is HomeUiState.HasPosts)
+            val post = (uiState as HomeUiState.HasPosts).selectedPost
             //详情
             ArticleScreen(
-                post = (uiState as HomeUiState.HasPosts).selectedPost,
+                post = post,
+                isFavorite = (uiState as HomeUiState.HasPosts).favorites.contains(post.id),
+                onToggleFavorite = { homeViewModel.toggleFavourite(post.id) }
             ) {
                 homeViewModel.closeArticle()
             }

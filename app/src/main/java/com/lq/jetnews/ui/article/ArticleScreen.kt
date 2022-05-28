@@ -15,12 +15,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.lq.jetnews.R
 import com.lq.jetnews.model.Post
+import com.lq.jetnews.utils.BookmarkButton
+import com.lq.jetnews.utils.FavoriteButton
+import com.lq.jetnews.utils.ShareButton
+import com.lq.jetnews.utils.TextSettingsButton
 
 
 @Composable
 fun ArticleScreen(
     post: Post,
     modifier: Modifier = Modifier,
+    isFavorite: Boolean,
+    onToggleFavorite: (String) -> Unit,
     onBack: () -> Unit
 ) {
     Scaffold(
@@ -67,7 +73,24 @@ fun ArticleScreen(
             )
         },
         bottomBar = {
-
+            val md = Modifier
+            Surface(elevation = 8.dp, modifier = md) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = md
+                        .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Vertical))
+                        .height(56.dp)
+                        .fillMaxWidth()
+                ) {
+                    FavoriteButton(onClick = { })
+                    BookmarkButton(
+                        isBookmarked = isFavorite,
+                        onClick = { onToggleFavorite(post.id) })
+                    ShareButton(onClick = {  })
+                    Spacer(modifier = Modifier.weight(1f))
+                    TextSettingsButton(onClick = {})
+                }
+            }
         }) { innerPadding ->
         PostContent(post = post, modifier = Modifier.padding(innerPadding))
     }
