@@ -51,7 +51,7 @@ class InterestsViewModel(
         )
 
     init {
-        refreshAll()
+//        refreshAll()
     }
 
     fun toggleTopicSelection(topic: TopicSelection) {
